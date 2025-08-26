@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NobleVestCapital Investment Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+  <style>
+  #bottom-nav {
+  display: flex;
+  flex-direction: row; /* This makes the buttons horizontal */
+  justify-content: space-around;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #d40404;
+  padding: 10px 0;
+  z-index: 999;
+}
+
+
+/* Individual nav item */
+.nav-item {
+  display: flex;
+  flex-direction: column;       /* icon above label */
+  align-items: center;          /* center icon and label horizontally */
+  justify-content: center;      /* center content vertically inside button */
+  flex: 1;                      /* all buttons share horizontal space equally */
+  min-width: 60px;              /* prevents squishing on small screens */
+  font-size: 14px;
+  color: #800000;
+  cursor: pointer;
+  text-align: center;           /* label centered under icon */
+  padding: 6px 0;               /* optional: adds vertical padding */
+}
+
+.bottom-nav .nav-icon {
+  font-size: clamp(18px, 4vw, 24px);  /* responsive icon size */
+}
+
+.bottom-nav .nav-label {
+  margin-top: 4px;
+  font-size: clamp(10px, 2.5vw, 14px); /* responsive label size */
+  text-align: center;
+}
+
+
+
+/* Fullscreen overlay */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(4, 0, 0, 0.8);
+  z-index: 1000;
+  padding: 10px; /* ✅ ensures spacing on very small screens */
+}
+
+/* Modal box */
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  width: 100%;       /* ✅ take full available width inside parent */
+  max-width: 400px;  /* ✅ only expand up to 400px */
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(169, 21, 21, 0.3);
+  position: relative;
+}
+
+
+/* Close button (top-right) */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+}
+
+/* Image scaling */
+.modal-content img {
+  width: 100%;
+  max-width: 120px;   /* reduced for small screens */
+  height: auto;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+/* Text list */
+.modal-content ul {
+  margin: 15px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.modal-content li {
+  margin: 8px 0;
+  font-size: 15px;
+  line-height: 1.4;
+  word-wrap: break-word; /* prevents overflow */
+}
+
+
+/* Buttons */
+.btn {
+  display: block;
+  width: 100%;
+  max-width: 320px;   /* keeps buttons from being too wide on large screens */
+  margin: 10px auto;  /* centers the button */
+  padding: 12px;
+  background: #db4e07;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background: #e83f01;
+}
+
+/* Small screens: slightly smaller font/padding */
+@media (max-width: 400px) {
+  .btn {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+
+#dashboard {
+  width: 95%;                  /* prevents overflow on small screens */
+  max-width: 600px;            /* keeps it neat on larger screens */
+  margin: 10px auto;
+  padding: 15px;
+  background: linear-gradient(135deg, #2a0153, #4b0082); /* royal purple gradient */
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  color: #fff; /* makes text readable */
+  box-sizing: border-box;      /* ensures padding doesn’t push content outside */
+}
+
+#dashboard h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: #d4af37; /* gold heading for luxury */
+}
+
+/* Small screen adjustments */
+@media (max-width: 480px) {
+  #dashboard {
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  #dashboard h2 {
+    font-size: 18px;
+  }
+}
+
+
+#dashboard .card {
+  background: #1e1e2f; /* dark card for contrast */
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  font-size: 14px;
+  border: 1px solid #d4af37; /* thin gold border */
+  transition: all 0.3s ease;
+  word-wrap: break-word;       /* prevent text overflow */
+  overflow: hidden;            /* ensures child content doesn’t spill */
+}
+
+#dashboard .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 18px rgba(212,175,55,0.4); /* golden glow hover */
+}
+
+#dashboard p,
+#dashboard h3,
+#dashboard ul {
+  text-align: center;
+  margin: 8px 0;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  #dashboard .card {
+    padding: 12px;
+    font-size: 13px; /* slightly smaller for mobile */
+  }
+
+  #dashboard h3 {
+    font-size: 16px;
+  }
+
+  #dashboard p {
+    font-size: 12px;
+  }
+}
+
+
+    html {
+  scroll-behavior: smooth;
+}
+
+/* Responsive grid for plans */
+.plan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* default: 3 per row */
+  gap: 20px;
+}
+
+/* Tablet: 2 per row */
+@media (max-width: 992px) {
+  .plan-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Mobile: 1 per row */
+@media (max-width: 768px) {
+  .plan-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+.investment-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 10px;         /* adds breathing room */
+  box-sizing: border-box; /* prevents overflow */
+}
+
+    body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f4f6f8;
+  color: #000000;
+}
+
+#plans {
+  padding: 40px 20px;
+}
+
+#plans h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.plan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* smaller min width for mobile */
+  gap: 15px;
+  justify-items: center; /* center cards in grid */
+  padding: 0 10px; /* padding on sides for small screens */
+}
+
+.plan-card {
+  border-radius: 16px;
+  background: #2a0153; /* deep purple */
+  padding: 15px; /* slightly smaller padding for mobile */
+  box-shadow: 0 6px 15px rgba(42, 1, 83, 0.6);
+  border: 1px solid #d4af37;
+  transition: all 0.3s ease;
+  text-align: center;
+  width: 100%; /* fill available grid space */
+  max-width: 280px; /* optional max width */
+}
+
+.plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(212, 175, 55, 0.5);
+}
+
+.plan-card h3 {
+  margin: 0 0 10px;
+  color: #d4af37;
+  font-size: 18px; /* slightly smaller for mobile */
+}
+
+.plan-card p {
+  font-size: 14px;
+  color: #f1f1f1;
+  line-height: 1.4;
+}
+
+.plan-card button {
+  margin-top: 12px;
+  padding: 10px 15px;
+  background-color: #d4af37;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.plan-card button:hover {
+  background-color: #b89625;
+}
+
+/* Extra tweaks for very small screens */
+@media (max-width: 480px) {
+  .plan-grid {
+    grid-template-columns: 1fr; /* stack cards vertically */
+    gap: 10px;
+  }
+
+  .plan-card {
+    padding: 12px;
+    max-width: 95%;
+  }
+
+  .plan-card h3 {
+    font-size: 16px;
+  }
+
+  .plan-card p {
+    font-size: 13px;
+  }
+
+  .plan-card button {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+}
+
+/* Header and Footer */
+header, footer {
+  background-color: #2a0153;
+  color: #ffffff;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .plan-card button {
+    width: 100%;       /* Full width on mobile */
+    padding: 12px;     /* Slightly larger for tapping */
+    font-size: 16px;   /* Bigger text for readability */
+  }
+
+  header, footer {
+    padding: 15px;     /* Smaller padding on mobile */
+    font-size: 14px;   /* Smaller font for better fit */
+  }
+}
+
+    /* Base styles */
+nav {
+  background-color: #2a0153;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px;
+  flex-wrap: wrap; /* allows wrapping on smaller screens */
+}
+
+nav a,
+nav button {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+section {
+  padding: 40px 20px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+  nav {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  nav a,
+  nav button {
+    font-size: 1.1em;
+    width: 100%;
+    text-align: center;
+  }
+
+  section {
+    padding: 20px 10px;
+  }
+}
+    .card {
+  background-color: #ffffff;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 8px;
+  box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Button styling */
+.btn {
+  background-color: #393332;
+  border: none;
+  padding: 6px 12px;
+  font-size: 0.95em;
+  cursor: pointer;
+  border-radius: 20px;
+  margin-top: 8px;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #2a2322;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+  .card {
+    padding: 15px;
+    margin: 15px 10px;
+    border-radius: 6px;
+  }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+
+/* Bottom nav responsive adjustments */
+@media (max-width: 400px) {
+  #bottom-nav {
+    padding: 10px 0;          /* reduce padding for small screens */
+  }
+
+  #bottom-nav button {
+    font-size: 16px;          /* make icons/buttons readable */
+  }
+}
+
+
+    input,
+select {
+  padding: 10px;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #360236;
+}
+
+.highlight {
+  background-color: #da7cda;
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+#platform,
+#login {
+  display: none;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+  input,
+  select {
+    padding: 12px;
+    font-size: 1em;
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+
+  .highlight {
+    padding: 12px;
+    font-size: 1em;
+    text-align: center;
+  }
+}
+    #countdownDisplay {
+  font-weight: bold;
+  color: rgb(255, 0, 212);
+  margin-top: 10px;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .plan-card,
+  #dashboard {
+    max-width: 100%;
+    margin: 0 auto 20px;
+    padding: 15px;
+    box-sizing: border-box;
+  }
+
+  #countdownDisplay {
+    font-size: 1em;
+    margin-top: 8px;
+    text-align: center;
+  }
+}
+
+
+
+/* Make tables scrollable on small screens */
+/* Table base styling */
+table {
+  font-size: 14px;
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  background-color: #f9f9fb;
+}
+
+/* Table header */
+table thead tr {
+  background: linear-gradient(135deg, #5a189a, #3c096c);
+  color: #fff;
+}
+
+table th,
+table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Row hover effect */
+table tbody tr:hover {
+  background-color: #e0d7f5;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+
+  table thead {
+    display: none; /* Hide header on mobile */
+  }
+
+  table tbody, 
+  table tr, 
+  table td {
+    display: block;
+    width: 100%;
+  }
+
+  table tr {
+    margin-bottom: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background-color: #fff;
+  }
+
+  table td {
+  text-align: left; /* change from right to left */
+  padding-left: 50%;
+  position: relative;
+}
+
+
+  table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    width: 45%;
+    padding-left: 10px;
+    font-weight: bold;
+    text-align: left;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <!-- Signup Section -->
+<section id="signup" class="section">
+  <img src="project_glo.jpg" alt="GLO Logo" 
+       style="width: 80px; height: auto; display: block; margin: 0 auto 15px;">
+  
+  <h1 style="text-align: center;">Welcome to NobleVest Capital</h1>
+  <p style="text-align: center;">Create your account to begin your journey</p>
+  
+  <div class="card">
+    <input type="text" id="username" placeholder="Enter your name" required />
+    <input type="email" id="email" placeholder="Enter your email" required />
+    <input type="password" id="password" placeholder="Create a password" required />
+    
+    <button class="btn" onclick="signup()">Sign Up</button>
+    
+    <p style="text-align: center; margin-top: 10px;">
+      Already have an account? 
+      <a href="#" onclick="showLogin()">Login here</a>
+    </p>
+  </div>
+</section>
+
+  <!-- Login Section -->
+<section id="login" class="section" style="display:none;">
+  <img src="project_glo.jpg" alt="GLO Logo" style="width: 60px; height: auto; display: block; margin: 0 auto;">
+  <h1>Login to NobleVest Capital</h1>
+  <p>Enter your details to continue</p>
+  <div class="card">
+    <input type="email" id="loginEmail" placeholder="Enter your email" />
+    <input type="password" id="loginPassword" placeholder="Enter your password" />
+    <button class="btn" onclick="login()">Login</button>
+    <p>Don’t have an account? <a href="#" onclick="showSignup()">Sign up here</a></p>
+  </div>
+</section>
+
+<!-- Home Section -->
+<section id="home" class="section" style="display: none;">
+  <img src="project_glo.jpg" alt="GLO Logo" style="width: 280px; height: auto; display: block; margin: 0 auto 20px;">
+
+  <!-- Welcome card inside home -->
+  <div class="card">
+    <h2>Welcome to NobleVest Capital</h2>
+    <p>Start investing and earn daily returns.</p>
+    <p><strong>Live Exchange Rate:</strong> ₦1 = $0.0013</p>
+    <button class="btn" onclick="document.getElementById('plans').scrollIntoView()">Get Started</button>
+  </div>
+
+  <!-- Daily sign-in section -->
+  <div id="daily-signin" style="text-align: center; margin-top: 20px;">
+    <button onclick="dailySignIn()" class="btn">Check-In</button>
+    <p id="signin-message" style="margin-top: 10px;"></p>
+  </div>
+</section>
+
+
+    <!-- Dashboard Section -->
+<section id="dashboard" class="section" style="display: none;">
+  <h2>Your Dashboard</h2>
+  
+  <div class="card">
+    <h3>Account Balance</h3>
+    <p id="dashboardBalance">₦500</p>
+  </div>
+
+  <div class="card">
+    <h3>Active Investments</h3>
+    <ul id="activePlans"></ul>
+  </div>
+
+  <div class="card">
+    <h3>Referral Program</h3>
+    <p>Invite your friends and earn:</p>
+    <a id="referralLink" target="_blank" style="color: blue; text-decoration: underline;">
+      Loading...
+    </a>
+  </div>
+</section>
+
+
+    Plans Section
+<section id="plans" class="section" style="display: none;">
+  <h2>Choose Your Investment Plan</h2>
+  <div id="balance">₦0</div>
+  <div id="planList" class="plan-grid"></div>
+</section>
+
+<section id="transactions" class="section" style="display: none;">
+  <!-- <div id="depositSection">
+    <div class="card">
+      <h3>Deposit Funds</h3>
+      <div class="highlight">
+        Account Number: <strong>7034920205</strong><br />
+        Bank: <strong>PalmPay</strong><br />
+        Account Name: <strong>Marcel Akachukwu</strong>
+      </div>
+      <input type="number" id="depositAmount" placeholder="Enter amount in ₦" />
+      <button class="btn" onclick="startDepositCountdown()">Deposit</button>
+      <p id="countdownDisplay"></p>
+      <button class="btn" id="confirmDepositBtn" style="display:none;" onclick="confirmDeposit()">Confirm Deposit</button>
+    </div>
+  </div>
+
+  <div id="withdrawSection">
+    <div class="card">
+      <h3>Withdraw Funds</h3>
+      <input type="number" id="withdrawAmount" placeholder="Enter amount in ₦" />
+      <input type="text" id="accountNumber" placeholder="Account Number" />
+      <button class="btn" onclick="withdraw()">Withdraw</button>
+    </div>
+  </div> -->
+
+  <h2>Deposit</h2>
+
+      <div class="card">
+        <h3>Deposit Funds</h3>
+        <div class="highlight">
+          Account Number: <strong>7034920205</strong><br />
+          Bank: <strong>PalmPay</strong><br />
+          Account Name: <strong>Marcel Akachukwu</strong>
+        </div>
+        <input type="number" id="depositAmount" placeholder="Enter amount in ₦" />
+        <button class="btn" onclick="startDepositCountdown()">Deposit</button>
+        <p id="countdownDisplay"></p>
+        <button class="btn" id="confirmDepositBtn" style="display:none;" onclick="confirmDeposit()">Confirm Deposit</button>
+      </div>
+      </section>
+
+
+<section id="payoutSection" class="section" style="display: none;">
+<h2>Payout</h2>
+
+      <div class="card">
+        <h3>Withdraw Funds</h3>
+        <input type="number" id="withdrawAmount" placeholder="Enter amount in ₦" />
+        <select id="bankSelect">
+          <option>Kingsley's Bank</option>
+          <option>Fidelity Bank</option>
+          <option>Access Bank</option>
+          <option>Kuda Bank</option>
+          <option>Moniepoint (MFB)</option>
+          <option>Opay Bank</option>
+          <option>Palmpay Bank</option>
+          <option>Eco Bank</option>
+          <option>Zenith Bank</option>
+          <option>Union Bank</option>
+          <option>First Bank</option>
+          <option>Fairmoni Bank</option>
+          <option>Polaris Bank</option>
+          <option>Stanbic Bank</option>
+          <option>Sterling Bank</option>
+          <option>Wema Bank</option>
+          <option>Keystone Bank</option>
+          <option>UBA Bank</option>
+          <option>Providus Bank</option>
+          <option>Taj Bank Limited</option>
+        </select>
+        <input type="text" id="accountNumber" placeholder="Enter your account number" />
+        <input type="text" id="accountName" placeholder="Enter your account name" />
+        <button class="btn" onclick="withdraw()">Withdraw</button>
+      </div>
+    </section>
+
+    
+  <!-- About Section -->
+<section id="about" class="section" style="display: none;">
+  <h2>About Us</h2>
+  <div class="card">
+    <p><strong>Our Story:</strong> Why Choose NobleVest Capital Platform?
+
+NobleVest Capital Platform is your gateway to smart, secure, and consistent returns. We offer high-yield investment plans tailored to grow your money with ease. With fast payouts, zero hidden fees, real-time tracking, and 24/7 customer support, your financial growth is always our priority.
+
+Join NobleVest Capital today — where your money works smarter, not harder.</p>
+    <p><strong>Contact:</strong> support@gloinvestor.com | +2348001234567</p>
+  </div>
+
+  <!-- 🔑 VIP Code Redeem Section -->
+  <div class="card" style="background: linear-gradient(135deg, #2a0153, #6a11cb); color: white; border: 2px solid gold; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+    <h3 style="color: gold; text-align: center;">VIP Promo Code</h3>
+    <p style="font-size: 14px; text-align: center;">Enter your one-time VIP code to unlock a package.</p>
+    <input type="text" id="vipCode" placeholder="Enter VIP Code" 
+           style="padding:10px; width:80%; border-radius:8px; border:none; margin:10px auto; display:block;">
+    <button onclick="redeemCode()" 
+            style="padding:10px 20px; background: gold; color:black; font-weight:bold; border:none; border-radius:8px; cursor:pointer; display:block; margin:0 auto;">
+      Redeem
+    </button>
+    <p id="redeemMsg" style="text-align:center; margin-top:10px;"></p>
+  </div>
+
+  <!-- Top-Up Button (Place it above Logout or anywhere you like in About) -->
+<button onclick="showDeposit()" 
+        style="margin-top:20px; padding:10px 20px; 
+               background: linear-gradient(135deg, #d4af37, #b8860b); 
+               color: #1e1e2f; 
+               font-weight: bold;
+               border:none; border-radius:8px; 
+               cursor:pointer;
+               box-shadow: 0 4px 10px rgba(212,175,55,0.3);
+               transition: all 0.3s ease;">
+  Deposit
+</button>
+
+
+<!-- Payout Button (Place it under Top-Up button in About) -->
+<button onclick="showWithdraw()" 
+        style="margin-top:10px; padding:10px 20px; 
+               background: linear-gradient(135deg, #b8860b, #ffd700); 
+               color: #1e1e2f; 
+               font-weight: bold;
+               border:none; border-radius:8px; 
+               cursor:pointer;
+               box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+               transition: all 0.3s ease;">
+  Payout
+</button>
+
+
+
+  <!-- Transaction History Button (moved above Logout) -->
+  <button class="btn" onclick="showTransactions()" 
+        style="margin-top:20px; padding:10px 20px; 
+               background: linear-gradient(135deg, #6a0dad, #8a2be2); 
+               color: #fff; 
+               font-weight: bold;
+               border:none; border-radius:8px; 
+               cursor:pointer;
+               box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+               transition: all 0.3s ease;">
+  View Transaction History
+</button>
+
+
+  <!-- Logout Button -->
+  <button onclick="logout()" 
+        style="margin-top:10px; padding:10px 20px; 
+               background: linear-gradient(135deg, #b91c1c, #dc2626); 
+               color:#fff; 
+               font-weight: bold;
+               border:none; border-radius:8px; 
+               cursor:pointer;
+               box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3);
+               transition: all 0.3s ease;">
+  Logout
+</button>
+
+
+  <!-- Transaction History Table -->
+<table id="transactionHistoryTable">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Type</th>
+      <th>Amount (₦)</th>
+    </tr>
+  </thead>
+  <tbody id="transactionHistoryBody">
+    <!-- Transaction rows will be inserted dynamically here -->
+  </tbody>
+</table>
+</section>
+
+    <footer>
+      &copy; 2025 NobleVest Capital Platform. All rights reserved.
+    </footer>
+  </div>
+
+<script>
+let balance = 0;
+let pendingDeposit = 0;
+let countdownTimer;
+
+function updateBalanceDisplay() {
+  const currentUserEmail = localStorage.getItem("currentUser");
+  if (!currentUserEmail) return;
+
+  const users = JSON.parse(localStorage.getItem("users")) || {};
+  const user = users[currentUserEmail];
+
+  const balance = user ? user.balance : 0;
+  document.getElementById("dashboardBalance").textContent = `₦${balance.toLocaleString()}`;
+}
+
+
+function dailySignIn() {
+  const today = new Date().toDateString();
+  const lastSignin = localStorage.getItem('lastSignin');
+
+  if (lastSignin === today) {
+    document.getElementById('signin-message').textContent = "You’ve already claimed today’s bonus.";
+  } else {
+    // ✅ Always fetch latest balance from localStorage
+    let balance = parseInt(localStorage.getItem("balance") || "0");
+    balance += 50; // add sign-in bonus
+    localStorage.setItem("balance", balance);
+
+    updateBalanceDisplay(); // refresh dashboard balance
+
+    // ✅ Update gloUser stored object
+    let storedUser = JSON.parse(localStorage.getItem('gloUser'));
+    storedUser.balance = balance;
+    localStorage.setItem('gloUser', JSON.stringify(storedUser));
+
+    // ✅ Save last sign-in date
+    localStorage.setItem('lastSignin', today);
+
+    // ✅ Show message
+    document.getElementById('signin-message').textContent = "₦50 bonus added to your account.";
+
+    // ✅ Log the daily sign-in transaction
+    let transactions = JSON.parse(localStorage.getItem('transactions') || "[]");
+    transactions.push({
+      date: new Date().toLocaleString(),
+      type: "Daily Sign-In Bonus",
+      amount: 50
+    });
+    localStorage.setItem('transactions', JSON.stringify(transactions));
+  }
+}
+
+function redeemCode() {
+  const inputCode = document.getElementById("vipCode").value.trim().toUpperCase();
+  let codes = JSON.parse(localStorage.getItem("promoCodes") || "[]");
+
+  let found = codes.find(c => c.code === inputCode);
+
+  if (!found) {
+    document.getElementById("redeemMsg").innerText = "❌ Invalid VIP code!";
+    return;
+  }
+
+  if (found.used) {
+    document.getElementById("redeemMsg").innerText = "❌ This code has already been used!";
+    return;
+  }
+
+  if (Date.now() > found.expiry) {
+    document.getElementById("redeemMsg").innerText = "⏳ This code has expired!";
+    return;
+  }
+
+  // ✅ Create an investment package from the code
+  const amount = parseInt(found.package);
+  const now = new Date().getTime();
+  const newPlan = {
+    amount: amount,
+    daily: Math.floor(amount * 0.05), // 5% daily (adjust as needed)
+    startTime: now,
+    nextDrop: now + 24 * 60 * 60 * 1000,
+    daysLeft: 40,
+    status: "Active",
+    source: "VIP"   // 🔑 Tag it as VIP
+  };
+
+  // Save to active plans
+  let userPlans = JSON.parse(localStorage.getItem("userPlans") || "[]");
+  userPlans.push(newPlan);
+  localStorage.setItem("userPlans", JSON.stringify(userPlans));
+
+  // ✅ Refresh dashboard
+  updateDashboard();
+
+  // Record as a transaction
+  let transactions = JSON.parse(localStorage.getItem("transactions") || "[]");
+  transactions.push({
+    date: new Date().toLocaleString(),
+    type: "VIP Redeem",
+    amount: amount
+  });
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+
+  // Mark code as used
+  found.used = true;
+  localStorage.setItem("promoCodes", JSON.stringify(codes));
+
+  // Success message
+  document.getElementById("redeemMsg").innerText =
+    "🎉 VIP Success! ₦" + amount.toLocaleString() + " has been invested automatically.";
+}
+
+function showWithdraw() {
+  // Hide all other sections first
+  const sections = document.querySelectorAll('.section');
+  sections.forEach(sec => sec.style.display = 'none');
+
+  // Show payout section
+  const payoutSec = document.getElementById('payoutSection');
+  if (payoutSec) {
+    payoutSec.style.display = 'block';
+    payoutSec.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+
+
+function showTransactions() {
+  const transactions = JSON.parse(localStorage.getItem("transactions") || "[]");
+  const table = document.getElementById("transactionHistoryTable");
+  const tbody = document.getElementById("transactionHistoryBody");
+
+  tbody.innerHTML = ""; // clear previous entries
+
+  if (transactions.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:10px;">No transactions yet.</td></tr>`;
+  } else {
+    // Show latest transactions on top
+    transactions.slice().reverse().forEach(tx => {
+      const tr = document.createElement("tr");
+
+      const tdDate = document.createElement("td");
+      tdDate.textContent = tx.date;
+      tdDate.style.border = "1px solid #ccc";
+      tdDate.style.padding = "8px";
+
+      const tdType = document.createElement("td");
+      tdType.textContent = tx.type;
+      tdType.style.border = "1px solid #ccc";
+      tdType.style.padding = "8px";
+
+      const tdAmount = document.createElement("td");
+      tdAmount.textContent = tx.amount.toLocaleString();
+      tdAmount.style.border = "1px solid #ccc";
+      tdAmount.style.padding = "8px";
+
+      tr.appendChild(tdDate);
+      tr.appendChild(tdType);
+      tr.appendChild(tdAmount);
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  table.style.display = "table"; // show the table
+}
+
+function addTransaction(type, amount) {
+  const transactions = JSON.parse(localStorage.getItem("transactions") || "[]");
+
+  transactions.push({
+    date: new Date().toLocaleString(), // current date & time
+    type: type, // e.g., "Daily Sign-In", "Deposit", "Investment Plan"
+    amount: amount
+  });
+
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+}
+
+
+ function signup() {
+  let username = document.getElementById("username").value.trim();
+  let email = document.getElementById("email").value.trim();
+  let password = document.getElementById("password").value.trim();
+
+  if (!username || !email || !password) {
+    alert("Please fill in all fields.");
+    return;
+  }
+
+  // Get existing users
+  let users = JSON.parse(localStorage.getItem("users")) || {};
+
+  if (users[email]) {
+    alert("This email is already registered. Please log in.");
+    showLogin();
+    return;
+  }
+
+  // Save new user with ₦500 welcome bonus
+  users[email] = {
+    username: username,
+    email: email,
+    password: password,
+    balance: 500,        // 🎁 Welcome bonus
+    investments: []
+  };
+
+  localStorage.setItem("users", JSON.stringify(users));
+  localStorage.setItem("currentUser", email);
+  localStorage.setItem("loggedIn", "true");
+
+  alert("Signup successful! You received ₦500 welcome bonus. Welcome, " + username);
+
+  // ✅ Show platform
+  showPlatform();
+
+  // ✅ Immediately update dashboard & balance
+  updateBalanceDisplay();  // show ₦500 on balance section
+  updateDashboard();       // update any dashboard info if needed
+}
+
+  
+function login() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
+
+  if (!email || !password) {
+    alert("Please fill in both fields.");
+    return;
+  }
+
+  // Get all users
+  let users = JSON.parse(localStorage.getItem('users')) || {};
+
+  // Check if user exists and password matches
+  if (!users[email] || users[email].password !== password) {
+    alert("Invalid email or password.");
+    return;
+  }
+
+  // ✅ Save this user as current session
+  localStorage.setItem('currentUser', email);
+  localStorage.setItem('loggedIn', 'true');
+
+  // ✅ Show platform sections
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('signup').style.display = 'none';
+  document.getElementById('home').style.display = 'block';
+  document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('plans').style.display = 'block';
+  document.getElementById('bottom-nav').style.display = 'flex';
+
+  // ✅ Update dashboard immediately
+  updateBalanceDisplay();
+  updateDashboard();
+}
+
+
+function logout() {
+  // Clear login session
+  localStorage.removeItem('currentUser');
+  localStorage.setItem('loggedIn', 'false');
+
+  // Hide all sections
+  document.querySelectorAll('.section').forEach(sec => sec.style.display = 'none');
+
+  // Show login/signup
+  document.getElementById('signup').style.display = 'block';
+  document.getElementById('login').style.display = 'none';
+
+  // Hide bottom navigation
+  document.getElementById('bottom-nav').style.display = 'none';
+
+  alert("You have been logged out.");
+}
+
+
+function showPlatform() {
+  document.getElementById('signup').style.display = 'none';
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('home').style.display = 'block';
+  document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('plans').style.display = 'block';
+  document.getElementById('bottom-nav').style.display = 'flex';
+
+  // Update balance and dashboard immediately
+  updateBalanceDisplay();
+  updateDashboard();
+}
+
+
+function showSignup() {
+  document.getElementById("signup").style.display = "block";
+  document.getElementById("login").style.display = "none";
+}
+
+function showLogin() {
+  document.getElementById("signup").style.display = "none";
+  document.getElementById("login").style.display = "block";
+}
+
+
+function startDepositCountdown() {
+  const amount = parseInt(document.getElementById('depositAmount').value);
+  if (!isNaN(amount) && amount > 0) {
+    pendingDeposit = amount;
+    let timeLeft = 300;
+   document.getElementById('countdownDisplay').textContent = `Time left: ${formatTime(timeLeft)}`;
+
+    document.getElementById('confirmDepositBtn').style.display = 'none';
+
+    clearInterval(countdownTimer);
+    countdownTimer = setInterval(() => {
+      timeLeft--;
+      document.getElementById('countdownDisplay').textContent = `Time left: ${formatTime(timeLeft)}`;
+      if (timeLeft <= 0) {
+        clearInterval(countdownTimer);
+        document.getElementById('countdownDisplay').textContent = "Countdown finished. Please confirm.";
+        document.getElementById('confirmDepositBtn').style.display = 'inline-block';
+      }
+    }, 1000);
+  } else {
+    alert("Enter a valid deposit amount.");
+  }
+}
+
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+ return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+}
+
+function confirmDeposit() {
+  balance += pendingDeposit;
+
+  let storedUser = JSON.parse(localStorage.getItem('gloUser'));
+  storedUser.balance = balance;
+  localStorage.setItem('gloUser', JSON.stringify(storedUser));
+  updateBalanceDisplay();
+
+  // ✅ Log this deposit in transaction history
+  const transactions = JSON.parse(localStorage.getItem("transactions") || "[]");
+  transactions.push({
+    date: new Date().toLocaleString(),
+    type: "Deposit",
+    amount: pendingDeposit
+  });
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+
+  alert(`₦${pendingDeposit} has been added to your balance.`);
+
+  pendingDeposit = 0;
+  document.getElementById('confirmDepositBtn').style.display = 'none';
+  document.getElementById('countdownDisplay').textContent = '';
+  document.getElementById('depositAmount').value = '';
+}
+
+// function showDeposit() {
+//   console.log("in desposit sections")
+//   // // Hide all main sections
+//   // const sections = document.querySelectorAll('.section');
+//   // sections.forEach(sec => sec.style.display = 'block');
+
+//   // Show the transactions section
+//   document.getElementById('transactions').style.display = 'block';
+
+//   // Show only deposit, hide withdraw
+//   document.getElementById('depositSection').style.display = 'block';
+//   document.getElementById('withdrawSection').style.display = 'none';
+
+//   // // Scroll smoothly to top of deposit section
+//   // document.getElementById('depositSection').scrollIntoView({ behavior: 'smooth' });
+// }
+
+
+
+    function invest() {
+  const planSelect = document.getElementById('planSelect');
+  const selectedOption = planSelect.options[planSelect.selectedIndex];
+  const amount = parseInt(selectedOption.dataset.amount);
+
+  // ✅ Always get latest balance from localStorage
+  let balance = parseInt(localStorage.getItem("balance") || "0");
+
+  if (balance >= amount) {
+    balance -= amount;
+    localStorage.setItem("balance", balance);
+    updateBalanceDisplay();
+
+    // ✅ Update gloUser object
+    let storedUser = JSON.parse(localStorage.getItem('gloUser'));
+    storedUser.balance = balance;
+    localStorage.setItem('gloUser', JSON.stringify(storedUser));
+
+    // ✅ Save investment in "activePlans"
+    let activePlans = JSON.parse(localStorage.getItem("activePlans") || "[]");
+    activePlans.push({
+      amount: amount,
+      date: new Date().toLocaleString(),
+      status: "Active"
+    });
+    localStorage.setItem("activePlans", JSON.stringify(activePlans));
+
+    // ✅ Update Active Investments list in the dashboard
+    displayActivePlans();
+
+    // ✅ Record as a transaction
+    let transactions = JSON.parse(localStorage.getItem("transactions") || "[]");
+    transactions.push({
+      date: new Date().toLocaleString(),
+      type: "Investment",
+      amount: amount
+    });
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+
+    alert(`You have invested ₦${amount}.`);
+  } else {
+    alert("Insufficient balance. Please deposit funds first.");
+  }
+}
+
+function withdraw() {
+  const amount = parseInt(document.getElementById('withdrawAmount').value);
+  const accountNumber = document.getElementById('accountNumber').value.trim();
+
+  if (!isNaN(amount) && amount > 0 && accountNumber) {
+    let storedUser = JSON.parse(localStorage.getItem('gloUser'));
+    let balance = storedUser.balance || 0;
+
+    if (balance >= amount) {
+      balance -= amount;
+      updateBalanceDisplay();
+
+      storedUser.balance = balance;
+      localStorage.setItem('gloUser', JSON.stringify(storedUser));
+
+      // Record withdrawal as transaction
+      let transactions = JSON.parse(localStorage.getItem("transactions") || "[]");
+      transactions.push({
+        date: new Date().toLocaleString(),
+        type: "Withdrawal",
+        amount: amount
+      });
+      localStorage.setItem("transactions", JSON.stringify(transactions));
+
+      alert(`₦${amount} withdrawn successfully.`);
+    } else {
+      alert("Insufficient balance.");
+    }
+  } else {
+    alert("Please enter a valid amount and account number.");
+  }
+}
+
+
+window.onload = () => {
+  const loggedIn = localStorage.getItem('loggedIn') === 'true';
+  const currentUser = localStorage.getItem('currentUser');
+
+  if (loggedIn && currentUser) {
+    // User already logged in → show platform
+    showPlatform(); // your function that shows home/dashboard/plans
+    updateBalanceDisplay();
+    updateDashboard();
+  } else {
+    // User not logged in → force signup first
+    document.getElementById('signup').style.display = 'block';
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('home').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('plans').style.display = 'none';
+    document.getElementById('bottom-nav').style.display = 'none';
+  }
+};
+
+</script>
+
+
+<script>
+  const investmentPlans = [
+    { amount: 3000, daily: 300, total: 12000 },
+    { amount: 5000, daily: 500, total: 20000 },
+    { amount: 10000, daily: 1000, total: 40000 },
+    { amount: 20000, daily: 2000, total: 80000 },
+    { amount: 30000, daily: 3000, total: 120000 },
+    { amount: 50000, daily: 5000, total: 200000 },
+    { amount: 100000, daily: 10000, total: 400000 },
+    { amount: 200000, daily: 20000, total: 800000 },
+    { amount: 300000, daily: 30000, total: 1200000 },
+    { amount: 400000, daily: 40000, total: 1600000 },
+    { amount: 500000, daily: 50000, total: 2000000 },
+    { amount: 700000, daily: 70000, total: 2800000 },
+    { amount: 1000000, daily: 100000, total: 4000000 }
+  ];
+
+  const planList = document.getElementById('planList');
+
+  investmentPlans.forEach((plan, index) => {
+    const card = document.createElement('div');
+    card.className = 'plan-card';
+    card.innerHTML = `
+      <h3>₦${plan.amount.toLocaleString()}</h3>
+      <p>Daily Return: ₦${plan.daily.toLocaleString()}</p>
+      <p>Total in 40 Days: ₦${plan.total.toLocaleString()}</p>
+      <button onclick="buyPlan(${index})">Invest</button>
+    `;
+    planList.appendChild(card);
+  });
+
+  function buyPlan(index) {
+  const plan = investmentPlans[index];
+  const confirmBuy = confirm(`Are you sure you want to invest ₦${plan.amount.toLocaleString()}?`);
+  if (!confirmBuy) return;
+
+  let storedUser = JSON.parse(localStorage.getItem("gloUser"));
+  let balance = storedUser.balance || 0;
+
+  if (balance < plan.amount) {
+    alert("Insufficient balance to invest in this plan.");
+    return;
+  }
+
+  const now = new Date().getTime();
+  const newPlan = {
+    ...plan,
+    startTime: now,
+    nextDrop: now + 24 * 60 * 60 * 1000,
+    daysLeft: 40
+  };
+
+  let userPlans = JSON.parse(localStorage.getItem("userPlans") || "[]");
+  userPlans.push(newPlan);
+  localStorage.setItem("userPlans", JSON.stringify(userPlans));
+
+  storedUser.balance = balance - plan.amount;
+  localStorage.setItem("gloUser", JSON.stringify(storedUser));
+
+  // ✅ Record the plan purchase as a transaction
+  let transactions = JSON.parse(localStorage.getItem("transactions") || "[]");
+  transactions.push({
+    date: new Date().toLocaleString(),
+    type: "Plan Purchase",
+    amount: plan.amount
+  });
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+
+  // ✅ Start countdown for this new plan
+  startPlanCountdown(newPlan);
+
+  alert("Plan purchased successfully! Daily income will drop every 24hrs.");
+}
+
+
+  // --- Show referral link for the current user ---
+function showReferralLink() {
+  const currentUser = localStorage.getItem("currentUser");
+  if (!currentUser) return; // exit if no user is logged in
+
+  const refInput = document.getElementById("refLink");
+  if (refInput) {
+    refInput.value = `${window.location.origin}${window.location.pathname}?ref=${currentUser}`;
+  }
+}
+
+// --- Update dashboard: balance, active plans, countdowns ---
+function updateDashboard() {
+  const investments = JSON.parse(localStorage.getItem("userPlans") || "[]");
+  const storedUser = JSON.parse(localStorage.getItem("gloUser") || "{}");
+  let balance = storedUser.balance || 0;
+
+  const now = Date.now();
+  let updated = false;
+
+  investments.forEach(investment => {
+    if (investment.daysLeft > 0 && now >= investment.nextDrop) {
+      balance += investment.daily; // add daily income
+      investment.nextDrop += 24 * 60 * 60 * 1000; // move to next day
+      investment.daysLeft -= 1;
+      updated = true;
+    }
+  });
+
+  if (updated) {
+    storedUser.balance = balance;
+    localStorage.setItem("gloUser", JSON.stringify(storedUser));
+    localStorage.setItem("userPlans", JSON.stringify(investments));
+  }
+
+  // --- Update balance UI ---
+  const balanceEl = document.getElementById("dashboardBalance");
+  if (balanceEl) balanceEl.textContent = `₦${balance.toLocaleString()}`;
+
+  // --- Update active plans UI ---
+  const listEl = document.getElementById("activePlans");
+  if (listEl) {
+    listEl.innerHTML = "";
+    investments.forEach(inv => {
+      const li = document.createElement("li");
+
+      let timeLeft = inv.nextDrop - now;
+      if (timeLeft < 0) timeLeft = 0;
+
+      const hours = String(Math.floor(timeLeft / (1000 * 60 * 60))).padStart(2, "0");
+      const minutes = String(Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, "0");
+      const seconds = String(Math.floor((timeLeft % (1000 * 60)) / 1000)).padStart(2, "0");
+
+      let label = `₦${inv.amount.toLocaleString()} - ${inv.daysLeft} days left - Next income in: ${hours}:${minutes}:${seconds}`;
+if (inv.source === "VIP") {
+  label = "🔑 VIP " + label;  // add VIP label
+}
+li.textContent = label;
+listEl.appendChild(li);
+    });
+  }
+
+  // --- Show referral link safely ---
+  showReferralLink();
+}
+
+// --- Run update every second ---
+setInterval(updateDashboard, 1000);
+updateDashboard(); // initial call
+</script>
+
+<script>
+  // 1️⃣ Navigation / helper functions
+
+  // Function to show only one section at a time
+  function showSection(sectionId) {
+    // Hide all sections
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(sec => sec.style.display = 'none');
+
+    // Special case: if Home is clicked, show Home + Dashboard + Plans
+    if (sectionId === 'home') {
+      document.getElementById('home').style.display = 'block';
+      document.getElementById('dashboard').style.display = 'block';
+      document.getElementById('plans').style.display = 'block';
+    } else {
+      // Show only the chosen section
+      document.getElementById(sectionId).style.display = 'block';
+    }
+  }
+
+  function navigateHome() {
+  // Hide all main sections first
+  const sections = document.querySelectorAll('.section');
+  sections.forEach(sec => sec.style.display = 'none');
+
+  // Show Home section
+  document.getElementById('home').style.display = 'block';
+
+  // ALSO show Dashboard and Plans inside Home
+  document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('plans').style.display = 'block';
+}
+
+
+  function showProductSection() {
+    showSection('plans');
+  }
+
+  function openProfile() {
+    showSection('dashboard');
+  }
+
+  function showTeam() {
+    showSection('transactions');
+  }
+
+  // Function to show deposit section
+  function showDeposit() {
+    showSection('transactions');
+    // Show the transactions section
+  
+  }
+
+  // Modal functions
+  function showModal() {
+    document.getElementById('welcomeModal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('welcomeModal').style.display = 'none';
+  }
+
+  // Show modal when the page loads
+  window.addEventListener('load', function () {
+    showModal();
+ navigateHome(); // Home is the default page
+  });
+</script>
+
+<script> 
+function showSection(sectionId) {
+  // Hide all sections first
+  const sections = document.querySelectorAll('section');
+  sections.forEach(sec => sec.style.display = 'none');
+
+  // Try to show the clicked section
+  const section = document.getElementById(sectionId);
+  if (!section) {
+    console.warn(`Section with id="${sectionId}" not found!`);
+    return; // prevent errors if section doesn't exist
+  }
+  section.style.display = 'block';
+
+  // Special case: Transactions
+  if (sectionId === 'transactions') {
+    const deposit = document.getElementById('depositSection');
+    const payout = document.getElementById('payoutSection');
+    if (deposit) deposit.style.display = 'block';
+    if (payout) payout.style.display = 'none';
+  }
+}
+</script>
+
+</body>
+<!-- Bottom Navigation Bar -->
+<div id="bottom-nav" style="position: fixed; bottom: 0; left: 0; width: 100%;
+  background: linear-gradient(135deg, #3c096c, #5a189a); 
+  border-top: 2px solid #ffd700;
+  display: flex; justify-content: space-around; 
+  padding: 15px 0; z-index: 2000; 
+  box-shadow: 0 -3px 8px rgba(0,0,0,0.2);">
+  
+  <button class="btn" onclick="navigateHome()">🏠</button>
+  <button class="btn" onclick="showSection('plans')">📦</button>
+  <button class="btn" onclick="showSection('dashboard')">👤</button>
+  <button class="btn" onclick="showSection('transactions')">👥</button>
+  <button class="btn" onclick="showSection('about')">ℹ️</button>
+</div>
+
+
+
+<!-- Welcome Modal -->
+<div id="welcomeModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <div>
+      <img src="project_glo.jpg" alt="Logo" />
+      <h2>Welcome to NobleVestCapital</h2>
+      <ul>
+        <li>🎁 Welcome bonus of ₦500</li>
+        <li>✅ Daily check-in of ₦50</li>
+        <li>💸 Income drops every 24hrs</li>
+        <li>⏰ Withdrawal time: 9:00AM – 6PM</li>
+      </ul>
+      <button class="btn" onclick="window.open('https://t.me/+9C8XW9IQJRo2MmNk')">Telegram Channel</button>
+      <button class="btn" onclick="window.open('https://t.me/+9C8XW9IQJRo2MmNk')">Telegram Group</button>
+    </div>
+  </div>
+</div>
+
+</html>
